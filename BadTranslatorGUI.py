@@ -40,7 +40,6 @@ def translations():
         if failure is False:
             print("Update: Begining bad translation...")
             translator = Translator()
-            translate_output_log_textbox.configure(state="normal")
             trans_amnt -= 1
             languages = ["af", "sq", "am", "ar", "el", "fr", "ru", "pl", "de", "en"]
             lang_length = len(languages)
@@ -61,8 +60,10 @@ def translations():
                 else:
                     output_temp = "\n\n" + str(x + 1) + ": " + result.text
                 print("Translation #", current_translation, ": ", result.text)
+                translate_output_log_textbox.configure(state="normal")
                 translate_output_log_textbox.insert("end", output_temp)
                 translate_output_log_textbox.see("end")
+                translate_output_log_textbox.configure(state="disabled")
                 translated_text = result.text
                 translate_progress_label.configure(text="Translating... (" + str(current_translation) + "/" + str(trans_amnt + 1) + ")")
                 x = x + 1
@@ -74,6 +75,7 @@ def translations():
             translate_output_out_textbox.configure(state="normal")
             translated_text = translator.translate(translated_text, dest='en')
             translate_output_out_textbox.insert("end", translated_text.text)
+            translate_output_out_textbox.configure(state="disabled")
             print("Update: Translation finished!")
             translate_progress_label.configure(text="Done! (" + str(trans_amnt + 1) + "/" + str(trans_amnt + 1) + ")")
     print("\n\nWaiting for user input...")
