@@ -6,6 +6,7 @@ from tkinter.ttk import *
 from tkinter import messagebox
 import threading
 import pyperclip as p
+prog_ver = "1.1.0"
 def translations():
     translate_misc_copy_button['state'] = t.DISABLED
     translate_input_submit['state'] = t.DISABLED
@@ -26,7 +27,7 @@ def translations():
         print("Failed!\nError: User either did enter an integer or the program failed to parse the input.\nUpdate: Alerting user to error...", end="")
         t.messagebox.showerror("Error!", "Error: The translation amount must be a number!")
         print("Done!")
-    if failure is False:
+    if failure is False and trans_amnt > 1:
         failure = True
         print("\nUpdate: Getting original_text from translate_input_textbox...", end="")
         try:
@@ -78,6 +79,10 @@ def translations():
             translate_output_out_textbox.configure(state="disabled")
             print("Update: Translation finished!")
             translate_progress_label.configure(text="Done! (" + str(trans_amnt + 1) + "/" + str(trans_amnt + 1) + ")")
+    if failure is False and trans_amnt <= 1:
+        print("\nWarning!: User entered number less than or equal to one! Alerting user...", end="")
+        t.messagebox.showwarning("Warning!", "The number of translations cannot be one or lower!")
+        print("Done!")
     print("\n\nWaiting for user input...")
     translate_input_submit['state'] = t.NORMAL
     translate_input_textbox.configure(state="normal")
@@ -90,7 +95,7 @@ def copy_button():
         print("Done!\nUpdate: Translation copied to user's clipboard")
     except:
         print("Failed!\nError: Unable to parse text in translate_output_out_textbox! Textbox may be empty?\nUpdate: Alerting user to error...", end="")
-        t.messagebox.showerror("Error: Something when wrong while copying from the output textbox.\nThe textbox may be empty?")
+        t.messagebox.showerror("Error!", "Error: Something when wrong while copying from the output textbox.\nThe textbox may be empty?")
         print("Done!")
     print("\n\nWaiting for user input...")
 def exit_button():
@@ -104,14 +109,21 @@ def start_thread():
         thread.start()
     except:
         thread.join()
-resolution = "700x580"
-title = "MrHatman26's Bad Translator"
+def about_button():
+    print("\nUpdate: User clicked about button.\nUpdate: Showing program information...")
+    mesg = "This program was made by MrHatman26 AKA nobody important.\n\nWhat is this?: This is a simple program that takes some text and translates it multiple times making the text (hopefully) a funny nonsensical mess.\n\nThis program was made using Python and uses the following libraries: -googletrans -random -tkinter -threading -pyperclip\n\nCurrent Version: " + prog_ver
+    t.messagebox.showinfo("About", mesg)
+    print("Done!\n\nWaiting for user input...")
+resolution = "700x600"
+title = "MrHatman26's Bad Translator " + prog_ver
 print("Update: Creating main window...", end="")
 window = t.Tk()
 print("Done!\nUpdate: Setting window resolution to " + resolution + "...", end="")
 window.geometry(resolution)
 print("Done!\nUpdate: Setting window title to " + title + "...", end="")
 window.title(title)
+print("Done!\nUpdate: Setting icon...", end="")
+window.iconbitmap("Icon.ico")
 print("Done!\nUpdate: Creating GUI elements...", end="")
 #Text entry frame
 translate_input_frame = t.Frame(window)
@@ -146,7 +158,8 @@ translate_progress_frame.pack()
 translate_misc_frame = t.Frame(window)
 translate_misc_copy_button = t.Button(translate_misc_frame, text="Copy", width=45, command=copy_button)
 translate_misc_copy_button.pack(pady=4, side=t.TOP)
-translate_misc_exit_button = t.Button(translate_misc_frame, text="Exit", width=45, command=exit_button).pack(side=t.BOTTOM)
+translate_misc_about_button = t.Button(translate_misc_frame, text="About", width=45, command=about_button).pack()
+translate_misc_exit_button = t.Button(translate_misc_frame, text="Exit", width=45, command=exit_button).pack(side=t.BOTTOM, pady=4)
 translate_misc_frame.pack()
 translate_misc_copy_button['state'] = t.DISABLED
 log_scrollbar = t.Scrollbar(window, command=translate_output_log_textbox.yview, width=15)
